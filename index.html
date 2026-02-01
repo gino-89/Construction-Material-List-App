@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "primary": "#137fec",
+                "safety-orange": "#f57c00",
+                "whatsapp-green": "#25D366",
+                "background-light": "#f2f4f7",
+                "industrial-gray": "#334155",
+            },
+            fontFamily: {
+                "sans": ["Inter", "sans-serif"]
+            },
+        },
+    },
+}
+</script>
+<style type="text/tailwindcss">
+@layer components {
+    .focused-task-section {
+        @apply transition-all duration-300 ease-in-out border-2 border-transparent bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm opacity-80 scale-[0.98];
+    }
+    .focused-task-section:focus-within {
+        @apply opacity-100 scale-100 border-safety-orange shadow-xl z-10 ring-4 ring-safety-orange/5;
+    }
+    .ios-input {
+        @apply w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-safety-orange/20 focus:border-safety-orange h-14 text-base transition-all px-4;
+    }
+    .input-hint {
+        @apply text-[11px] font-medium text-slate-400 mt-1.5 ml-1 flex items-center gap-1;
+    }
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+</style>
+<style>
+body { min-height: max(884px, 100dvh); }
+</style>
+</head>
+<body class="bg-background-light dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans">
+
+<header class="sticky top-0 z-[60] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-5 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-industrial-gray p-2 rounded-xl text-white shadow-inner">
+<span class="material-symbols-outlined block text-[22px]">construction</span>
+</div>
+<div>
+<h1 class="text-lg font-bold tracking-tight leading-none">Creador de Listas</h1>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Materiales de Obra</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">person</span>
+</button>
+</header>
+
+<main class="flex-1 px-4 py-6 space-y-6 pb-36">
+
+<!-- Proyecto -->
+<section class="focused-task-section group">
+<div class="flex items-center gap-2 mb-4 opacity-60 group-focus-within:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-slate-400 group-focus-within:text-safety-orange">edit_note</span>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Identificación del Proyecto</h3>
+</div>
+<div class="relative">
+<label class="block">
+<input id="proyectoNombre" class="ios-input font-semibold text-lg placeholder:text-slate-300 placeholder:font-normal" placeholder="Nombre del Proyecto (ej: Casa Martínez)" type="text" value=""/>
+</label>
+</div>
+</section>
+
+<!-- Agregar nuevo item -->
+<section class="focused-task-section group">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2 opacity-60 group-focus-within:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-slate-400 group-focus-within:text-safety-orange">add_shopping_cart</span>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Agregar nuevo item</h3>
+</div>
+<span class="text-[10px] font-bold py-1 px-2 bg-slate-100 dark:bg-slate-700 rounded text-slate-400 group-focus-within:bg-safety-orange/10 group-focus-within:text-safety-orange">PASO ACTIVO</span>
+</div>
+<div class="space-y-5">
+<div class="relative">
+<label class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase ml-1 mb-1 block">Material</label>
+<div class="relative group/input">
+<input id="materialInput" class="ios-input pr-12" list="material-suggestions" placeholder="Buscar material..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-safety-orange">search</span>
+</div>
+<datalist id="material-suggestions"></datalist>
+<div class="input-hint">
+<span class="material-symbols-outlined text-[14px]">info</span> Sugerencias: Cemento, Varilla, Arena...
+</div>
+</div>
+
+<div class="grid grid-cols-2 gap-4">
+<div class="relative">
+<label class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase ml-1 mb-1 block">Dimensiones</label>
+<input id="dimensionInput" class="ios-input" placeholder="Ej: 2x4 m" type="text"/>
+<div class="input-hint group-focus-within:text-primary">Largo x Ancho</div>
+</div>
+<div class="relative">
+<label class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase ml-1 mb-1 block">Espesor</label>
+<input id="espesorInput" class="ios-input" placeholder="Ej: 1/2 pulg" type="text"/>
+<div class="input-hint group-focus-within:text-primary">Grosor/Calibre</div>
+</div>
+</div>
+
+<div class="flex items-end gap-3 pt-2">
+  <!-- Cantidad -->
+  <div class="flex-1 flex flex-col">
+    <label class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase ml-1 mb-1 block">Cantidad</label>
+    <input id="cantidadInput" type="number" class="ios-input text-center font-bold h-14" value="1"/>
+  </div>
+
+  <!-- Unidad -->
+  <div class="flex-1 flex flex-col">
+    <label class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase ml-1 mb-1 block">Unidad</label>
+    <input id="unidadInput" list="unidades-sugeridas" class="ios-input text-center font-bold h-14" placeholder="Pcs, Box..." />
+    <datalist id="unidades-sugeridas">
+      <option value="Pcs"></option>
+      <option value="Box"></option>
+      <option value="Bundle"></option>
+      <option value="Kg"></option>
+      <option value="m"></option>
+    </datalist>
+  </div>
+
+  <!-- Botón añadir -->
+  <button
+    id="btnAgregar"
+    class="flex-1 bg-industrial-gray hover:bg-slate-700 active:bg-slate-900 text-white font-bold h-14 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-slate-200 dark:shadow-none transition-all active:scale-95"
+  >
+    <span class="material-symbols-outlined">add</span> Añadir
+  </button>
+</div>
+
+</div>
+</section>
+
+<!-- Materiales añadidos -->
+<section class="focused-task-section group">
+<div class="flex items-center justify-between mb-4 opacity-60 group-focus-within:opacity-100 transition-opacity">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 group-focus-within:text-safety-orange">list_alt</span>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Materiales Añadidos</h3>
+</div>
+<div class="flex gap-2">
+<button id="btnExport" class="text-[11px] font-bold text-primary bg-primary/5 px-2 py-1 rounded-lg">Exportar TXT</button>
+<button id="btnLimpiar" class="text-[11px] font-bold text-red-600 bg-red-100 px-2 py-1 rounded-lg">Limpiar Lista</button>
+</div>
+</div>
+<div id="listaMateriales" class="space-y-3 overflow-hidden"></div>
+</section>
+
+</main>
+
+<footer class="fixed bottom-0 left-0 right-0 p-5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 z-[70] pb-8">
+<!-- Botones compartir / limpiar lista -->
+<div class="flex gap-2">
+  <button
+    id="btnCompartir"
+    class="flex-1 bg-whatsapp-green hover:bg-[#1ebe57] text-white font-bold h-14 rounded-2xl flex items-center justify-center gap-3 shadow-xl shadow-whatsapp-green/20 active:scale-[0.97] transition-all"
+  >
+    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.659 1.437 5.634 1.437h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    Compartir Lista de Materiales
+  </button>
+</div>
+</div>
+</footer>
+<!-- Modal Global -->
+<div
+  id="modalOverlay"
+  class="fixed inset-0 bg-black/40 z-[9999] hidden"
+>
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="bg-white dark:bg-slate-900 w-[90%] max-w-sm rounded-2xl p-5 shadow-2xl">
+      <h3 id="modalTitle" class="text-lg font-bold mb-2"></h3>
+      <p id="modalMessage" class="text-sm text-slate-600 dark:text-slate-400 mb-5"></p>
+
+      <div class="flex justify-end gap-3">
+        <button
+          id="modalCancel"
+          class="px-4 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 font-semibold"
+        >
+          Cancelar
+        </button>
+        <button
+          id="modalOk"
+          class="px-4 h-10 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold"
+        >
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const MATERIALES_BASE = [
+  //METAL STUDS//
+'Stud 1 ⅝',
+'Stud 2 ½',
+'Stud 3 ⅝',
+'Stud 3 ⅝',
+'Stud 4"',
+'Stud 6"',
+
+//METAL TRACKS//
+'Track 1 ⅝',
+'Track 2 ½',
+'Track 3 ⅝',
+'Track 3 ⅝',
+'Track 4"',
+'Track 6"',
+
+//SHEETROCK//
+'Sheetrock ¼',
+'Sheetrock ½',
+'Sheetrock ⅜',
+'Sheetrock ⅝',
+'Green Sheetrock ½',
+'Green Sheetrock ⅝',
+];
+
+const STORAGE_KEY = "paw_materiales_v1";
+const STORAGE_SUGGESTIONS = "paw_materiales_sugeridos";
+
+let materiales = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let materialesExtra = JSON.parse(localStorage.getItem(STORAGE_SUGGESTIONS)) || [];
+
+const datalist = document.getElementById("material-suggestions");
+const materialInput = document.getElementById("materialInput");
+const dimensionInput = document.getElementById("dimensionInput");
+const espesorInput = document.getElementById("espesorInput");
+const cantidadInput = document.getElementById("cantidadInput");
+const unidadInput = document.getElementById("unidadInput");
+const lista = document.getElementById("listaMateriales");
+const proyectoNombre = document.getElementById("proyectoNombre");
+
+// Render sugerencias
+function renderSugerencias() {
+  datalist.innerHTML = "";
+  [...MATERIALES_BASE, ...materialesExtra].forEach(mat => {
+    const opt = document.createElement("option");
+    opt.value = mat;
+    datalist.appendChild(opt);
+  });
+}
+renderSugerencias();
+
+// Guardar materiales
+function guardar() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(materiales));
+}
+
+// Agregar material extra a sugerencias
+function agregarSugerencia(material) {
+  if (!materialesExtra.includes(material) && !MATERIALES_BASE.includes(material)) {
+    materialesExtra.push(material);
+    localStorage.setItem(STORAGE_SUGGESTIONS, JSON.stringify(materialesExtra));
+    renderSugerencias();
+  }
+}
+
+// Render lista
+function render() {
+  lista.innerHTML = "";
+  materiales.forEach((m, i) => {
+    const item = document.createElement("div");
+    item.className = "bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border flex items-center justify-between";
+    item.innerHTML = `
+      <div class="flex items-center gap-4">
+        <div class="bg-white dark:bg-slate-800 w-11 h-11 rounded-lg flex items-center justify-center font-bold text-primary">
+          ${m.cantidad}
+        </div>
+        <div>
+          <p class="font-bold">${m.material}</p>
+          <p class="text-[11px] text-slate-500 italic">
+            ${m.dimension || ""} ${m.espesor ? "• " + m.espesor : ""} ${m.unidad ? "• " + m.unidad : ""}
+          </p>
+        </div>
+      </div>
+      <div class="flex gap-1">
+        <button data-edit="${i}">
+          <span class="material-symbols-outlined">edit</span>
+        </button>
+        <button data-delete="${i}">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+    `;
+    lista.appendChild(item);
+  });
+}
+render();
+
+// Agregar material
+let editIndex = null;
+document.getElementById("btnAgregar").addEventListener("click", () => {
+  if (!materialInput.value.trim()) return;
+
+  const data = {
+  material: materialInput.value.trim(),
+  dimension: dimensionInput.value.trim(),
+  espesor: espesorInput.value.trim(),
+  cantidad: cantidadInput.value || 1,
+  unidad: unidadInput.value.trim() || "" // vacío si no se selecciona
+};
+
+  if (editIndex !== null) {
+    materiales[editIndex] = data;
+    editIndex = null;
+    btnAgregar.innerHTML = `<span class="material-symbols-outlined">add</span> Añadir`;
+  } else {
+    materiales.push(data);
+    agregarSugerencia(data.material);
+  }
+
+  guardar();
+  render();
+
+  materialInput.value = "";
+dimensionInput.value = "";
+espesorInput.value = "";
+cantidadInput.value = 1;
+unidadInput.value = ""; // queda vacío
+});
+
+// Edit / Delete
+lista.addEventListener("click", e => {
+  const editBtn = e.target.closest("button[data-edit]");
+  const deleteBtn = e.target.closest("button[data-delete]");
+
+  if (editBtn) {
+    editIndex = Number(editBtn.dataset.edit);
+    const m = materiales[editIndex];
+    materialInput.value = m.material;
+    dimensionInput.value = m.dimension;
+    espesorInput.value = m.espesor;
+    cantidadInput.value = m.cantidad;
+    unidadInput.value = m.unidad;
+    btnAgregar.innerHTML = `<span class="material-symbols-outlined">save</span> Guardar cambios`;
+  }
+
+  if (deleteBtn) {
+    materiales.splice(deleteBtn.dataset.delete, 1);
+    guardar();
+    render();
+  }
+});
+
+// Exportar TXT
+document.getElementById("btnExport").addEventListener("click", () => {
+  if (!materiales.length) {
+  showAlert(
+    "Lista vacía",
+    "No hay materiales para exportar todavía."
+  );
+  return;
+}
+
+
+  const proyecto = proyectoNombre.value || "Proyecto sin nombre";
+  let texto = `Job: ${proyecto}\n\nMaterials:\n\n`;
+
+  materiales.forEach(m => {
+    const cantidadUnidad = m.cantidad + (m.unidad ? " " + m.unidad : "");
+    const detalles = [m.dimension, m.espesor].filter(Boolean).join(" • ");
+    const linea = `• ${cantidadUnidad} - ${m.material}` + (detalles ? ` • ${detalles}` : "");
+    texto += linea + "\n";
+  });
+
+  const blob = new Blob([texto], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Material_List_${proyecto.replace(/\s+/g, "_")}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+
+function exportarTxt() {
+  const proyecto = document.querySelector('input[placeholder*="Nombre del Proyecto"]').value || "Proyecto sin nombre";
+
+  let contenido = `Proyecto: ${proyecto}\n\nMateriales:\n`;
+
+  materiales.forEach(m => {
+    const cantidadUnidad = m.cantidad + (m.unidad ? " " + m.unidad : "");
+    const detalles = [m.dimension, m.espesor].filter(Boolean).join(" • ");
+    const linea = `• ${cantidadUnidad} - ${m.material}` + (detalles ? ` • ${detalles}` : "");
+    contenido += linea + "\n";
+  });
+
+  // Crear enlace y descargar
+  const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Material_List_${proyecto.replace(/\s+/g, "_")}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Compartir con Web Share API
+  document.getElementById("btnCompartir").addEventListener("click", () => {
+    if (!materiales.length) {
+  showAlert("Lista vacía", "No hay materiales para compartir");
+  return;
+}
+
+    const proyecto = proyectoNombre.value || "Sin nombre de proyecto";
+    let texto = `Proyecto: ${proyecto}\n\nLista de Materiales:\n\n`;
+
+    materiales.forEach((m) => {
+      texto += `• ${m.cantidad} ${m.unidad || ""} - ${m.material} ${m.dimension || ""} ${m.espesor ? "• " + m.espesor : ""}\n`;
+    });
+
+    if (navigator.share) {
+      navigator.share({
+        title: `Material List - ${proyecto}`,
+        text: texto
+      })
+      .then(() => console.log("Compartido correctamente"))
+      .catch(err => console.error("Error al compartir:", err));
+    } else {
+  navigator.clipboard.writeText(texto).then(() => {
+    showToast("Texto copiado al portapapeles");
+  });
+}
+  });
+
+  // Limpiar lista
+document.getElementById("btnLimpiar").addEventListener("click", function () {
+  if (!materiales.length) return;
+
+  showConfirm(
+    "Limpiar lista",
+    "¿Deseas borrar todos los materiales añadidos?",
+    function () {
+      materiales = [];
+      guardar();
+      render();
+    }
+  );
+});
+
+
+
+  const modalOverlay = document.getElementById("modalOverlay");
+const modalTitle = document.getElementById("modalTitle");
+const modalMessage = document.getElementById("modalMessage");
+const modalOk = document.getElementById("modalOk");
+const modalCancel = document.getElementById("modalCancel");
+
+function showConfirm(title, message, onConfirm) {
+  modalTitle.textContent = title;
+  modalMessage.textContent = message;
+
+  modalOverlay.classList.remove("hidden");
+
+  modalOk.onclick = function () {
+    modalOverlay.classList.add("hidden");
+    onConfirm && onConfirm();
+  };
+
+  modalCancel.onclick = function () {
+    modalOverlay.classList.add("hidden");
+  };
+}
+
+function showAlert(title, message) {
+  modalTitle.textContent = title;
+  modalMessage.textContent = message;
+
+  modalCancel.classList.add("hidden");
+  modalOk.textContent = "Aceptar";
+
+  modalOverlay.classList.remove("hidden");
+
+  modalOk.onclick = function () {
+    modalOverlay.classList.add("hidden");
+    modalCancel.classList.remove("hidden");
+    modalOk.textContent = "Confirmar";
+  };
+}
+
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className =
+    "fixed bottom-24 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-xl shadow-lg text-sm z-[9999] animate-fadeIn";
+  toast.textContent = message;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.remove(), 2200);
+}
+
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+
+</body>
+</html>
