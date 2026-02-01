@@ -420,7 +420,7 @@ function exportarTxt() {
   return;
 }
 
-    const proyecto = proyectoNombre.value || "Sin nombre de proyecto";
+    const Job = proyectoNombre.value || "-";
     let texto = `Proyecto: ${proyecto}\n\nLista de Materiales:\n\n`;
 
     materiales.forEach((m) => {
@@ -516,3 +516,4 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
